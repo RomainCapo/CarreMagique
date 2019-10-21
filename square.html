@@ -43,12 +43,15 @@
 		void main(void){
 			float fRadius = vRadius;
 			float fWidth = vWidth;
-			if((gl_FragCoord.x<pos.x+fRadius+fWidth && gl_FragCoord.x>pos.x+fRadius) && (gl_FragCoord.y<pos.y+fRadius+fWidth && gl_FragCoord.y>pos.y+fRadius))
-			{
-				gl_FragColor=vec4(1.0,1.0,1.0,1.0);
-			}
-			else
-			{
+			vec2 center = vec2( vCx, vCy );
+			if((pos.x>center.x-fRadius && pos.x<center.x+fRadius) && (pos.y<center.y+fRadius && pos.y>center.y-fRadius)){
+				if((pos.x>center.x-fRadius+fWidth && pos.x<center.x+fRadius-fWidth) && (pos.y>center.y-fRadius+fWidth && pos.y<center.y+fRadius-fWidth)){
+					gl_FragColor=vec4(0.0,0.0,0.0,1.0);
+				}
+				else{
+					gl_FragColor=vec4(1.0,1.0,1.0,1.0);
+				}
+			}else{
 				gl_FragColor=vec4(0.0,0.0,0.0,1.0);
 			}
 		}
@@ -79,15 +82,15 @@
 			prg.mvMatrixUniform=glContext.getUniformLocation(prg, 'uMVMatrix');
 		}
 		function drawSquares(){
-			vertices.push(centerX, centerY, 0.0);
-			indices.push(0);
-			/*var sceneBegin=-1;
+			//vertices.push(centerX, centerY, 0.0);
+			//indices.push(0);
+			var sceneBegin=-1;
 			var squareSize=2;
 			vertices.push(sceneBegin, sceneBegin, 0.0);
 			vertices.push(sceneBegin+squareSize, sceneBegin, 0.0);
 			vertices.push(sceneBegin, sceneBegin+squareSize, 0.0);
 			vertices.push(sceneBegin+squareSize, sceneBegin+squareSize, 0.0);
-			indices.push(0, 1, 2, 1, 2, 3);*/
+			indices.push(0, 1, 2, 1, 2, 3);
 		}
 		function initBuffers(){
 			drawSquares();
@@ -115,7 +118,7 @@
 				glContext.vertexAttribPointer(prg.vertexPositionAttribute, 3, glContext.FLOAT, false, 0, 0);
 				glContext.bindBuffer(glContext.ELEMENT_ARRAY_BUFFER, indexBuffer);
 
-				glContext.drawElements(glContext.POINTS, indices.length, glContext.UNSIGNED_SHORT, 0);
+				glContext.drawElements(glContext.TRIANGLES, indices.length, glContext.UNSIGNED_SHORT, 0);
 
 			}
 
@@ -159,9 +162,9 @@
 			var mousePos = getMousePos(myCanvas, evt);
 			centerX = (mousePos.x - myCanvas.width/2.0) / myCanvas.width * 2.0;
 			centerY = (myCanvas.height/2.0 - mousePos.y) / myCanvas.height * 2.0;
-			vertices = [];
+			/*vertices = [];
 			vertices.push(centerX, centerY, 0.0);
-			initBuffers();
+			initBuffers();*/
 		}, false);
 		function getMousePos(myCanvas, evt) {
 			var rect = myCanvas.getBoundingClientRect();
