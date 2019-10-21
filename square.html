@@ -44,12 +44,16 @@
 			float fRadius = vRadius;
 			float fWidth = vWidth;
 			vec2 center = vec2( vCx, vCy );
-			if((pos.x>center.x-fRadius && pos.x<center.x+fRadius) && (pos.y<center.y+fRadius && pos.y>center.y-fRadius)){
-				if((pos.x>center.x-fRadius+fWidth && pos.x<center.x+fRadius-fWidth) && (pos.y>center.y-fRadius+fWidth && pos.y<center.y+fRadius-fWidth)){
+			if((pos.x>center.x-fRadius-fWidth/2.0 && pos.x<center.x+fRadius+fWidth/2.0) && (pos.y<center.y+fRadius+fWidth/2.0 && pos.y>center.y-fRadius-fWidth/2.0)){
+				if((pos.x>center.x-fRadius+fWidth/2.0 && pos.x<center.x+fRadius-fWidth/2.0) && (pos.y>center.y-fRadius+fWidth/2.0 && pos.y<center.y+fRadius-fWidth/2.0)){
 					gl_FragColor=vec4(0.0,0.0,0.0,1.0);
 				}
 				else{
-					gl_FragColor=vec4(1.0,1.0,1.0,1.0);
+					float dWidth = fRadius + fWidth / 2.0;
+					float antialiasing = 1.0 - (abs(pos.x -dWidth) / fWidth);
+
+					gl_FragColor=vec4(antialiasing, antialiasing, antialiasing, 1.0);
+					//gl_FragColor=vec4(1.0,1.0,1.0,1.0);
 				}
 			}else{
 				gl_FragColor=vec4(0.0,0.0,0.0,1.0);
