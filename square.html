@@ -49,11 +49,7 @@
 					gl_FragColor=vec4(0.0,0.0,0.0,1.0);
 				}
 				else{
-					float dWidth = fRadius + fWidth / 2.0;
-					float antialiasing = 1.0 - (abs(pos.x -dWidth) / fWidth);
-
-					gl_FragColor=vec4(antialiasing, antialiasing, antialiasing, 1.0);
-					//gl_FragColor=vec4(1.0,1.0,1.0,1.0);
+					gl_FragColor=vec4(1.0,1.0,1.0,1.0);
 				}
 			}else{
 				gl_FragColor=vec4(0.0,0.0,0.0,1.0);
