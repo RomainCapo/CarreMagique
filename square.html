@@ -6,30 +6,30 @@
 	<script id="shader-vs" type="x-shader/x-vertex">
 		attribute vec3 aVertexPosition;
 
-		uniform float uRadius;
+		uniform float uWidth;
 		uniform float uAngle;
 		uniform float uCx;
 		uniform float uCy;
-		uniform float uWidth;
+		uniform float uThickness;
 		uniform mat4 uMVMatrix;
 		uniform mat4 uPMatrix;
 
 		varying vec3 pos;
-		varying float vRadius;
+		varying float vWidth;
 		varying float vAngle;
 		varying float vCx;
 		varying float vCy;
-		varying float vWidth;
+		varying float vThickness;
 
 		void main(void){
-			pos=aVertexPosition;
-			vRadius = uRadius;
+			pos = aVertexPosition;
+			vWidth = uWidth;
 			vAngle = uAngle;
 			vCx = uCx;
 			vCy = uCy;
-			vWidth = uWidth;
+			vThickness = uThickness;
 			gl_PointSize = 5.0;
-			gl_Position=uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+			gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
 		}
 	</script>
 
@@ -38,28 +38,39 @@
 		precision highp float;
 		#endif
 		varying vec3 pos;
-		varying float vRadius;
+		varying float vWidth;
 		varying float vAngle;
 		varying float vCx;
 		varying float vCy;
-		varying float vWidth;
+		varying float vThickness;
 
 		void main(void){
-			float fRadius = vRadius;
 			float fWidth = vWidth;
+			float fThickness = vThickness;
+
 			vec2 center = vec2(vCx, vCy);
+
 			float theta = atan((pos.y-center.y) , (pos.x-center.x));
+
 			float d = sqrt((pos.x-center.x) * (pos.x-center.x) + (pos.y-center.y) * (pos.y-center.y));
-			float rx = cos(vAngle - theta) ;
-			float ry = sin(vAngle - theta) ;
-			if(max(abs(d * rx), abs(d * ry)) <= (fRadius + (fWidth/2.0))){
-				if(max(abs(d * rx), abs(d * ry)) <= (fRadius - (fWidth/2.0))){
-					gl_FragColor=vec4(0.0, 0.0, 0.0, 1.0);
-				}else{
-					gl_FragColor=vec4(1.0, 1.0, 1.0, 1.0);
+
+			float rx = cos(vAngle - theta);
+			float ry = sin(vAngle - theta);
+
+			if(max(abs(d * rx), abs(d * ry)) <= fWidth + (fThickness / 2.0))
+			{
+				if(max(abs(d * rx), abs(d * ry)) <= fWidth - (fThickness / 2.0))
+				{
+					gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
 				}
-			}else{
-				gl_FragColor=vec4(0.0,0.0,0.0,1.0);
+				else
+				{
+					gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+				}
+			}
+			else
+			{
+				gl_FragColor = vec4(0.0,0.0,0.0,1.0);
 			}
 		}
 	</script>
@@ -67,47 +78,53 @@
 	<script>
 		var centerX = 0.0;
 		var centerY = 0.0;
-		var squareRadius = 0.5; // 50%
-		var squareWidth = 0.02;
+		var squareWidth = 0.5;
+		var squareThickness = 0.02;
 		var angle = 0.0;
 
-		var vertexBuffer=null;
-		var indexBuffer=null;
-		var indices=[];
-		var vertices=[];
-		var mvMatrix=mat4.create();
-		var pMatrix=mat4.create();
-		function initShaderParameters(prg){
-			prg.vertexPositionAttribute=glContext.getAttribLocation(prg, "aVertexPosition");
+		var vertexBuffer = null;
+		var indexBuffer = null;
+		var indices = [];
+		var vertices = [];
+		var mvMatrix = mat4.create();
+		var pMatrix = mat4.create();
+
+		function initShaderParameters(prg)
+		{
+			prg.vertexPositionAttribute = glContext.getAttribLocation(prg, "aVertexPosition");
 			glContext.enableVertexAttribArray(prg.vertexPositionAttribute);
 
-			prg.radiusUniform = glContext.getUniformLocation(prg, "uRadius");
+			prg.radiusUniform = glContext.getUniformLocation(prg, "uWidth");
 			prg.angleUniform = glContext.getUniformLocation(prg, "uAngle"),
 			prg.centerXUniform = glContext.getUniformLocation(prg, "uCx");
 			prg.centerYUniform = glContext.getUniformLocation(prg, "uCy");
-			prg.squareWidthUniform = glContext.getUniformLocation(prg, "uWidth");
+			prg.squareThicknessUniform = glContext.getUniformLocation(prg, "uThickness");
 
-			prg.pMatrixUniform=glContext.getUniformLocation(prg, 'uPMatrix');
-			prg.mvMatrixUniform=glContext.getUniformLocation(prg, 'uMVMatrix');
+			prg.pMatrixUniform = glContext.getUniformLocation(prg, 'uPMatrix');
+			prg.mvMatrixUniform = glContext.getUniformLocation(prg, 'uMVMatrix');
 		}
-		function drawSquares(){
-			//vertices.push(centerX, centerY, 0.0);
-			//indices.push(0);
-			var sceneBegin=-1;
-			var squareSize=2;
+
+		function drawSquares()
+		{
+			var sceneBegin = -1;
+			var squareSize = 2;
 			vertices.push(sceneBegin, sceneBegin, 0.0);
-			vertices.push(sceneBegin+squareSize, sceneBegin, 0.0);
-			vertices.push(sceneBegin, sceneBegin+squareSize, 0.0);
-			vertices.push(sceneBegin+squareSize, sceneBegin+squareSize, 0.0);
+			vertices.push(sceneBegin + squareSize, sceneBegin, 0.0);
+			vertices.push(sceneBegin, sceneBegin + squareSize, 0.0);
+			vertices.push(sceneBegin + squareSize, sceneBegin + squareSize, 0.0);
 			indices.push(0, 1, 2, 1, 2, 3);
 		}
-		function initBuffers(){
+
+		function initBuffers()
+		{
 			drawSquares();
 
-			vertexBuffer=getVertexBufferWithVertices(vertices);
-			indexBuffer=getIndexBufferWithIndices(indices);
+			vertexBuffer = getVertexBufferWithVertices(vertices);
+			indexBuffer = getIndexBufferWithIndices(indices);
 		}
-		function drawScene(){
+
+		function drawScene()
+		{
 				glContext.clearColor(0.9, 0.9, 0.9, 1.0);
 				glContext.enable(glContext.DEPTH_TEST);
 				glContext.clear(glContext.COLOR_BUFFER_BIT | glContext.DEPTH_BUFFER_BIT);
@@ -118,11 +135,11 @@
 				glContext.uniformMatrix4fv(prg.pMatrixUniform, false, pMatrix);
 				glContext.uniformMatrix4fv(prg.mvMatrixUniform, false, mvMatrix);
 
-				glContext.uniform1f(prg.radiusUniform, squareRadius);
+				glContext.uniform1f(prg.radiusUniform, squareWidth);
 				glContext.uniform1f(prg.angleUniform, angle);
 				glContext.uniform1f(prg.centerXUniform, centerX);
 				glContext.uniform1f(prg.centerYUniform, centerY);
-				glContext.uniform1f(prg.squareWidthUniform, squareWidth);
+				glContext.uniform1f(prg.squareThicknessUniform, squareThickness);
 
 				glContext.bindBuffer(glContext.ARRAY_BUFFER, vertexBuffer);
 				glContext.vertexAttribPointer(prg.vertexPositionAttribute, 3, glContext.FLOAT, false, 0, 0);
@@ -132,30 +149,34 @@
 
 			}
 
-		function initWebGL(){
-			glContext=getGLContext('webgl-canvas');
+		function initWebGL()
+		{
+			glContext = getGLContext('webgl-canvas');
 			initProgram();
 			initBuffers();
 			renderLoop();
 		}
 
-		function sliderRadiusChanged(){
-			squareRadius = document.getElementById("sliderRayon").value / 100.0;
-		}
-		function sliderWidthChanged(){
-			squareWidth = document.getElementById("sliderEpaisseur").value / 1000.0;
-		}
-		function sliderAngleChanged(){
-			angle = document.getElementById("sliderAngle").value * Math.PI / 180.0;
+		function sliderRadiusChanged()
+		{
+			squareWidth = document.getElementById("sliderRayon").value / 100.0;
 		}
 
+		function sliderWidthChanged()
+		{
+			squareThickness = document.getElementById("sliderEpaisseur").value / 1000.0;
+		}
+
+		function sliderAngleChanged()
+		{
+			angle = document.getElementById("sliderAngle").value * Math.PI / 180.0;
+		}
 		</script>
 	</head>
 
 	<body onload="initWebGL()">
 		<script>
 			displayTitle("Labo 1 - Équipe A3", "INF3dlma - Jonas Freiburghaus, Vincent Moulin et Romain Capocasale");
-
 		</script>
 
 		<div style="margin-left: 20px;">
@@ -163,7 +184,7 @@
 
             <br /><br />Rayon : <input type="range" id="sliderRayon" value="50" min="0" max="100" oninput="sliderRadiusChanged();">
             <br />Epaisseur : <input type="range" id="sliderEpaisseur" value="20" min="0" max="100" oninput="sliderWidthChanged();">
-						<br />Angle : <input type="range" id="sliderAngle" value="0" min="0" max="180" oninput="sliderAngleChanged();">
+						<br />Angle : <input type="range" id="sliderAngle" value="0" min="0" max="360" oninput="sliderAngleChanged();">
             <br />Centre : cliquer sur le canevas
 
             <br /><canvas id="webgl-canvas" width="500" height="500">HTML5 is not supported</canvas>
@@ -172,16 +193,17 @@
 
 	<script id='code-js' type="text/javascript">
 		var myCanvas = document.getElementById('webgl-canvas');
+
 		myCanvas.addEventListener('click', function(evt) {
 			var mousePos = getMousePos(myCanvas, evt);
 			centerX = (mousePos.x - myCanvas.width/2.0) / myCanvas.width * 2.0;
-			centerY = (myCanvas.height/2.0 - mousePos.y) / myCanvas.height * 2.0;
-			/*vertices = [];
-			vertices.push(centerX, centerY, 0.0);
-			initBuffers();*/
+			centerY = (myCanvas.height / 2.0 - mousePos.y) / myCanvas.height * 2.0;
 		}, false);
-		function getMousePos(myCanvas, evt) {
+
+		function getMousePos(myCanvas, evt)
+		{
 			var rect = myCanvas.getBoundingClientRect();
+
 			return {
 				x: evt.clientX - rect.left,
 				y: evt.clientY - rect.top
