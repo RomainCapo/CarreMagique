@@ -48,13 +48,16 @@
 			float fRadius = vRadius;
 			float fWidth = vWidth;
 			vec2 center = vec2(vCx, vCy);
-			float theta = atan(pos.y, pos.x);
-			// float d = sqrt((pos.x - center.x) * (pos.x - center.x) + (pos.y + center.y) * (pos.y + center.y));
-			float d = sqrt(pos.x * pos.x + pos.y * pos.y);
-			float rx = cos(vAngle - theta);
-			float ry = sin(vAngle - theta);
-			if(max(abs(d * rx), abs(d * ry)) <= fRadius){
-				gl_FragColor=vec4(1.0, 1.0, 1.0, 1.0);
+			float theta = atan((pos.y-center.y) , (pos.x-center.x));
+			float d = sqrt((pos.x-center.x) * (pos.x-center.x) + (pos.y-center.y) * (pos.y-center.y));
+			float rx = cos(vAngle - theta) ;
+			float ry = sin(vAngle - theta) ;
+			if(max(abs(d * rx), abs(d * ry)) <= (fRadius + (fWidth/2.0))){
+				if(max(abs(d * rx), abs(d * ry)) <= (fRadius - (fWidth/2.0))){
+					gl_FragColor=vec4(0.0, 0.0, 0.0, 1.0);
+				}else{
+					gl_FragColor=vec4(1.0, 1.0, 1.0, 1.0);
+				}
 			}else{
 				gl_FragColor=vec4(0.0,0.0,0.0,1.0);
 			}
