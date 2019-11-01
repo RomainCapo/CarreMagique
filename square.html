@@ -184,7 +184,7 @@
 
             <br /><br />Rayon : <input type="range" id="sliderRayon" value="50" min="0" max="100" oninput="sliderRadiusChanged();">
             <br />Epaisseur : <input type="range" id="sliderEpaisseur" value="20" min="0" max="100" oninput="sliderWidthChanged();">
-						<br />Angle : <input type="range" id="sliderAngle" value="0" min="0" max="360" oninput="sliderAngleChanged();">
+			<br />Angle : <input type="range" id="sliderAngle" value="0" min="0" max="360" oninput="sliderAngleChanged();">
             <br />Centre : cliquer sur le canevas
 
             <br /><canvas id="webgl-canvas" width="500" height="500">HTML5 is not supported</canvas>
@@ -193,12 +193,31 @@
 
 	<script id='code-js' type="text/javascript">
 		var myCanvas = document.getElementById('webgl-canvas');
+		var isDown = false;
 
-		myCanvas.addEventListener('click', function(evt) {
-			var mousePos = getMousePos(myCanvas, evt);
-			centerX = (mousePos.x - myCanvas.width/2.0) / myCanvas.width * 2.0;
-			centerY = (myCanvas.height / 2.0 - mousePos.y) / myCanvas.height * 2.0;
-		}, false);
+		myCanvas.addEventListener('mousemove', redrawSquare)
+
+		function redrawSquare(evt) {
+			if(isdown) {
+				var mousePos = getMousePos(myCanvas, evt);
+				centerX = (mousePos.x - myCanvas.width/2.0) / myCanvas.width * 2.0;
+				centerY = (myCanvas.height / 2.0 - mousePos.y) / myCanvas.height * 2.0;
+			}
+		}
+
+		myCanvas.addEventListener('click', function(evt){
+			isdown = true
+			redrawSquare(evt)
+			isdown = false
+		})
+
+		myCanvas.addEventListener('mousedown', function(evt) {
+			isdown = true
+		})
+
+		myCanvas.addEventListener('mouseup', function(evt) {
+			isdown = false
+		})
 
 		function getMousePos(myCanvas, evt)
 		{
