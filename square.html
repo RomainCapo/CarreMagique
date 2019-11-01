@@ -193,31 +193,31 @@
 
 	<script id='code-js' type="text/javascript">
 		var myCanvas = document.getElementById('webgl-canvas');
-		var isDown = false;
-
-		myCanvas.addEventListener('mousemove', redrawSquare)
+		let isDown = false
 
 		function redrawSquare(evt) {
-			if(isdown) {
+			if(isDown) {
 				var mousePos = getMousePos(myCanvas, evt);
 				centerX = (mousePos.x - myCanvas.width/2.0) / myCanvas.width * 2.0;
 				centerY = (myCanvas.height / 2.0 - mousePos.y) / myCanvas.height * 2.0;
 			}
 		}
 
+		function changeIsDown(evt) {
+			isDown = isDown ? false : true
+		}
+
+		myCanvas.addEventListener('mousemove', redrawSquare)
+
 		myCanvas.addEventListener('click', function(evt){
-			isdown = true
+			changeIsDown(evt)
 			redrawSquare(evt)
-			isdown = false
+			changeIsDown(evt)
 		})
 
-		myCanvas.addEventListener('mousedown', function(evt) {
-			isdown = true
-		})
+		myCanvas.addEventListener('mousedown', changeIsDown)
 
-		myCanvas.addEventListener('mouseup', function(evt) {
-			isdown = false
-		})
+		myCanvas.addEventListener('mouseup', changeIsDown)
 
 		function getMousePos(myCanvas, evt)
 		{
