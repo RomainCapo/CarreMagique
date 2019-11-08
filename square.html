@@ -55,6 +55,7 @@
 			varying float vThickness;
 
 			void main(void){
+			//Trigo
 				float fWidth = vWidth;
 				float fThickness = vThickness;
 
@@ -164,11 +165,13 @@
 				renderLoop();
 			}
 
+			// Recuperation de la valeur du slider pour l'epaisseur
 			function sliderRadiusChanged()
 			{
 				squareWidth = document.getElementById("sliderRayon").value / 100.0;
 			}
 
+			// Recuperation de la valeur du slider pour l'epaisseur
 			function sliderWidthChanged()
 			{
 				squareThickness = document.getElementById("sliderEpaisseur").value / 1000.0;
@@ -202,6 +205,7 @@
 			var myCanvas = document.getElementById('webgl-canvas');
 			let isDown = false
 
+			//Redessine le carre lors d'un deplacement ou un clic
 			function redrawSquare(evt) {
 				if(isDown) {
 					var mousePos = getMousePos(myCanvas, evt);
@@ -216,6 +220,7 @@
 
 			myCanvas.addEventListener('mousemove', redrawSquare)
 
+			// Redessine le carre a la position du clic
 			myCanvas.addEventListener('click', function(evt){
 				changeIsDown(evt)
 				redrawSquare(evt)
