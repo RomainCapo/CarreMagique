@@ -165,18 +165,19 @@
 				renderLoop();
 			}
 
-			// Recuperation de la valeur du slider pour l'epaisseur
-			function sliderRadiusChanged()
-			{
-				squareWidth = document.getElementById("sliderRayon").value / 100.0;
-			}
-
-			// Recuperation de la valeur du slider pour l'epaisseur
+			// Recuperation de la valeur du slider pour la largeur du carre
 			function sliderWidthChanged()
 			{
-				squareThickness = document.getElementById("sliderEpaisseur").value / 1000.0;
+				squareWidth = document.getElementById("sliderWidth").value / 100.0;
 			}
 
+			// Recuperation de la valeur du slider pour l'epaisseur de la bande du carre
+			function sliderThicknessChanged()
+			{
+				squareThickness = document.getElementById("sliderThickness").value / 1000.0;
+			}
+
+			// Recuperation de la valeur du slider pour l'angle du carre
 			function sliderAngleChanged()
 			{
 				angle = document.getElementById("sliderAngle").value * Math.PI / 180.0;
@@ -192,8 +193,8 @@
 			<div style="margin-left: 20px;">
 				<br>Un carré blanc
 
-				<br /><br />Rayon : <input type="range" id="sliderRayon" value="50" min="0" max="100" oninput="sliderRadiusChanged();">
-				<br />Epaisseur : <input type="range" id="sliderEpaisseur" value="20" min="0" max="100" oninput="sliderWidthChanged();">
+				<br /><br />Rayon : <input type="range" id="sliderWidth" value="50" min="0" max="100" oninput="sliderWidthChanged();">
+				<br />Epaisseur : <input type="range" id="sliderThickness" value="20" min="0" max="100" oninput="sliderThicknessChanged();">
 				<br />Angle : <input type="range" id="sliderAngle" value="0" min="0" max="360" oninput="sliderAngleChanged();">
 				<br />Centre : cliquer sur le canevas
 
@@ -228,7 +229,6 @@
 			})
 
 			myCanvas.addEventListener('mousedown', changeIsDown)
-
 			myCanvas.addEventListener('mouseup', changeIsDown)
 
 			function getMousePos(myCanvas, evt)
