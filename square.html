@@ -55,29 +55,37 @@
 			varying float vThickness;
 
 			void main(void){
-			//Trigo
 				float fWidth = vWidth;
 				float fThickness = vThickness;
 
+				// Creation d'un vecteur pour representer les coordonnes du centre
 				vec2 center = vec2(vCx, vCy);
 				
+				// Calcul des coordonnees du fragment shader par rapport au centre
 				float dx = pos.x-center.x;
 				float dy = pos.y-center.y;
 
+				// Calcul de l'angle thetha
 				float theta = atan(dy, dx);
+				
+				// Distance entre le centre et le fragment shader
 				float d = sqrt((dx * dx) + (dy * dy));
 
+				// Transformation en coordonnees polaire et soustraction de l'angle
 				float rx = cos(vAngle - theta);
 				float ry = sin(vAngle - theta);
 
+				// Formule mathematique decrivant un carré
+				// Retourne true si le pixel est à l'interieur du carre + la moitie de l'epaisseur, false si a l'exterieur du carre
 				if(max(abs(d * rx), abs(d * ry)) <= fWidth + (fThickness / 2.0))
 				{
+					//Si l'on se trouve a l'interieur du carre - la moitie de l'epaisseur on dessine le pixel en noir
 					if(max(abs(d * rx), abs(d * ry)) <= fWidth - (fThickness / 2.0))
 					{
-						gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+						gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0); 
 					}
 				}
-				else
+				else// Si le pixel se situe a l'exterieur du carre on le dessine en noir
 				{
 					gl_FragColor = vec4(0.0,0.0,0.0,1.0);
 				}
@@ -116,6 +124,8 @@
 			{
 				var sceneBegin = -1;
 				var squareSize = 2;
+				
+				// Ajout des 4 vertexs qui définissent le carré principal
 				vertices.push(sceneBegin, sceneBegin, 0.0);
 				vertices.push(sceneBegin + squareSize, sceneBegin, 0.0);
 				vertices.push(sceneBegin, sceneBegin + squareSize, 0.0);
@@ -193,7 +203,7 @@
 			<div style="margin-left: 20px;">
 				<br>Un carré blanc
 
-				<br /><br />Rayon : <input type="range" id="sliderWidth" value="50" min="0" max="100" oninput="sliderWidthChanged();">
+				<br /><br />Largeur : <input type="range" id="sliderWidth" value="50" min="0" max="100" oninput="sliderWidthChanged();">
 				<br />Epaisseur : <input type="range" id="sliderThickness" value="20" min="0" max="100" oninput="sliderThicknessChanged();">
 				<br />Angle : <input type="range" id="sliderAngle" value="0" min="0" max="360" oninput="sliderAngleChanged();">
 				<br />Centre : cliquer sur le canevas
