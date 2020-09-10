@@ -1,21 +1,21 @@
 # Infographie
 ## Labo 1
 
-Groupe :
+# Groupe :
 
 * A3
 
-Classe :
+# Classe :
 
 * INF3dlma
 
-Étudiants :
+# Étudiants :
 
-* Jonas Freiburghaus
-* Vincent Moulin
-* Romain Capocasale
+* Jonas Freiburghaus [@JonasFreibur](https://github.com/JonasFreibur)
+* Romain Capocasale [@RomainCapo](https://github.com/RomainCapo)
+* Vincent Moulin [@dicksor](https://github.com/dicksor)
 
-Semestre d'automne 2019
+5ème semestre du Bachelor
 
 ## Description
 
