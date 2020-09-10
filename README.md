@@ -1,13 +1,7 @@
-# Infographie
-## Labo 1
+# Carre Magique
 
-# Groupe :
-
-* A3
-
-# Classe :
-
-* INF3dlma
+* Goupe : A3
+* Classe : INF3dlma
 
 # Étudiants :
 
