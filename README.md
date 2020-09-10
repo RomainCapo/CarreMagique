@@ -2,14 +2,13 @@
 
 * Goupe : A3
 * Classe : INF3dlma
+* 5ème semestre du Bachelor
 
 # Étudiants :
 
 * Jonas Freiburghaus [@JonasFreibur](https://github.com/JonasFreibur)
 * Romain Capocasale [@RomainCapo](https://github.com/RomainCapo)
 * Vincent Moulin [@dicksor](https://github.com/dicksor)
-
-5ème semestre du Bachelor
 
 ## Description
 
